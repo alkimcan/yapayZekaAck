@@ -5,14 +5,7 @@ class Agent:
 
     def __init__(self, game, player = 'X', episode = 100000, epsilon = 0.9, discount_factor = 0.6, eps_reduce_factor = 0.01):
         """
-        game : it is the TicTacToe game which you train the agent on 
-        player : Agent is X(1) or O(-1). If you train the agent, player variable expresses that you train the agent which player for
-        brain : holds the q values of different states in the game
-        episode : how many game will be played at the end of the training
-        epsilon : the value that specify how often the agent do random move or move from q table
-        we decrease this value by time because our agent will be reached enough level, and we will not need at all
-        when we train it over about 10.000 times. So that the agent will only use its q-table.
-        discount_factor : backpropagation coefficient
+       açıklama bölümü
         """
         self.game = game
         self.player = player
@@ -24,8 +17,7 @@ class Agent:
         self.eps_reduce_factor = eps_reduce_factor
 
     def save_brain(self, player):
-        with open('brain'+player, 'wb') as brain_file:
-            pickle.dump(self.brain, brain_file)
+        
 
     def load_brain(self, player):
         try:
@@ -80,95 +72,10 @@ class Agent:
 
 
     def train_brain_x_byrandom(self):
-        for _ in range(self.episode):
-            if _ % 1000 == 0:
-                print('Episode: '+str(_))
-                self.epsilon -= self.eps_reduce_factor
-            move_history = []
-            # One game is played in each while loop
-            while True:
-                # don't want agent to play the same start, the agent will choose random action at the first action
-                if sum(self.game.get_current_game()==1) == 0 or random.random()<self.epsilon:
-
-                    available_actions = self.game.get_available_positions()
-                    action_x = random.choice(available_actions)
-
-                    move_history.append([self.game.get_current_game_tuple(), action_x])
-
-                    # self.game always let the X play firstly and it changes the player then in backend
-                    self.game.make_move(action_x)
-
-                else:
-                    action_x = self.use_brain()
-
-                    move_history.append([self.game.get_current_game_tuple(), action_x])
-
-                    self.game.make_move(action_x)
-                
-                # checking if game is over after X played
-                if self.game.is_winner():
-                    self.reward(1 ,move_history, self.game.winner)
-                    break
-                
-                # O always plays randomly
-                available_actions = self.game.get_available_positions()
-                action_o = random.choice(available_actions)
-                self.game.make_move(action_o)
-
-                # checking if game is over after O played
-                if self.game.is_winner():
-                        self.reward(1 ,move_history, self.game.winner)
-                        break
-
-        self.save_brain('X')
-        print('TRAINING IS DONE!')
-        print('RESULTS:')
-        print(self.results)
+       
 
     def train_brain_o_byrandom(self):
-        for _ in range(self.episode):
-            if _ % 1000 == 0:
-                print('Episode: '+str(_))
-                self.epsilon -= self.eps_reduce_factor
-            move_history = []
-            # One game is played in each while loop
-            while True:
-
-                available_actions = self.game.get_available_positions()
-                action_x = random.choice(available_actions)
-                # self.game always let the X play firstly and it changes the player then in backend
-                self.game.make_move(action_x)
-
-                # checking if game is over after X played
-                if self.game.is_winner():
-                    self.reward(-1 ,move_history, self.game.winner)
-                    break
-
-                # don't want agent to play the same start, the agent will choose random action at the first action
-                if random.random()<self.epsilon:
-
-                    available_actions = self.game.get_available_positions()
-                    action_o = random.choice(available_actions)
-
-                    move_history.append([self.game.get_current_game_tuple(), action_o])
-
-                    self.game.make_move(action_o)
-
-                else:
-                    action_o = self.use_brain()
-
-                    move_history.append([self.game.get_current_game_tuple(), action_o])
-
-                    self.game.make_move(action_o)
-
-                if self.game.is_winner():
-                    self.reward(-1 ,move_history, self.game.winner)
-                    break
-
-        self.save_brain('O')
-        print('TRAINING IS DONE!')
-        print('RESULTS:')
-        print(self.results)
+        
     
     def play_with_human(self):
         self.load_brain(self.player)
